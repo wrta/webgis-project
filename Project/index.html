@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./lib/leaflet.browser.print.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Leaflet Geoproject</title>
+</head>
+<body>
+    <div id="map"></div>
+    <button onclick=fullScreenView()>View in Full Screen</button>
+    <div class="coordinate" ></div>
+    <button class="print-map">Print Map</button>
+</body>
+</html>
+
+
+<script>
+        // map class initialization - setView(coordinates) put the center 
+        var map = L.map('map').setView([-23.304, -51.169], 7);
+    map.zoomControl.setPosition('topright');
+    // adding osm (OpenStreetMap) tilelayer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // adding markers in the center of map - can add how many markers need
+    L.marker([-23.304, -51.169]).addTo(map)
+        .bindPopup('Nice Editable PopUp')
+        .openPopup();
+    // add map scale
+    L.control.scale({position: 'bottomright'}).addTo(map)
+
+    //Full Screen Map View
+    var mapId = document.getElementById('map');
+    function fullScreenView(){
+        mapId.requestFullscreen();
+    }
+
+    //Map coordinate display
+    map.on('mousemove', function(e){
+        console.log(e)
+        $('.coordinate').html(`Lat: ${e.latlng.lat} Lng: ${e.latlng.lng}`)
+    })
+
+    //Print Map
+    $('.print-map').click(function(){
+        window.print();
+    })
+
+    var browserControl = L.control.browserPrint({position: 'bottomleft', title: 'Print as PDF'}).addTo(map);
+
+</script>
